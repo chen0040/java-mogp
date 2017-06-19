@@ -5,6 +5,7 @@ import com.github.chen0040.data.utils.TupleTwo;
 import com.github.chen0040.gp.commons.Observation;
 import com.github.chen0040.gp.treegp.TreeGP;
 import com.github.chen0040.gp.treegp.gp.*;
+import com.github.chen0040.gp.treegp.program.OperatorSet;
 import com.github.chen0040.gp.treegp.program.operators.*;
 import com.github.chen0040.moea.components.*;
 import com.github.chen0040.moea.components.Population;
@@ -51,6 +52,7 @@ public class NSGPII {
    private int populationSize = 100;
    private int maxArchive = 50;
    private CostFunction costFunction;
+   private int objectiveCount = 2;
 
    private ReplacementType replacementType = ReplacementType.Generational;
 
@@ -81,6 +83,18 @@ public class NSGPII {
       return gpConfig.getObservations();
    }
 
+   public OperatorSet getOperatorSet(){
+      return gpConfig.getOperatorSet();
+   }
+
+   public void addConstants(double... constants) {
+      gpConfig.addConstants(constants);
+   }
+
+   public void setVariableCount(int variableCount) {
+      gpConfig.setVariableCount(variableCount);
+   }
+
    public void initialize(){
       gpConfig.setPopulationSize(getPopulationSize());
       gpConfig.setMaxGeneration(getMaxGenerations());
@@ -98,6 +112,7 @@ public class NSGPII {
       moeaConfig.setRandomGenerator(randomGenerator);
       moeaConfig.setMaxArchive(maxArchive);
       moeaConfig.setReplacementType(replacementType);
+      moeaConfig.setObjectiveCount(objectiveCount);
 
       archive.setMediator(moeaConfig);
       archive.clear();
