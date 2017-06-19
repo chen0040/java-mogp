@@ -2,8 +2,10 @@ package com.github.chen0040.mogp;
 
 
 import com.github.chen0040.data.utils.TupleTwo;
+import com.github.chen0040.gp.commons.Observation;
 import com.github.chen0040.gp.treegp.TreeGP;
 import com.github.chen0040.gp.treegp.gp.*;
+import com.github.chen0040.gp.treegp.program.operators.*;
 import com.github.chen0040.moea.components.*;
 import com.github.chen0040.moea.components.Population;
 import com.github.chen0040.moea.components.Solution;
@@ -68,6 +70,17 @@ public class NSGPII {
       return archive;
    }
 
+   public void defaultConfig(){
+      gpConfig.getOperatorSet().addAll(new Plus(), new Minus(), new Divide(), new Multiply(), new Power());
+      gpConfig.getOperatorSet().addIfLessThanOperator();
+      gpConfig.addConstants(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0);
+      gpConfig.setVariableCount(2); // equal to the number of input parameter in an observation
+   }
+
+   public List<Observation> getObservations(){
+      return gpConfig.getObservations();
+   }
+
    public void initialize(){
       gpConfig.setPopulationSize(getPopulationSize());
       gpConfig.setMaxGeneration(getMaxGenerations());
@@ -90,11 +103,11 @@ public class NSGPII {
       archive.clear();
 
       population.setMediator(moeaConfig);
-      population.initialize(MOOSolution::new);
+      population.initialize(MOOGPSolution::new);
 
       List<com.github.chen0040.gp.treegp.program.Solution> programs = population.getSolutions().stream().map(s -> {
-         MOOSolution ms = (MOOSolution)s;
-         return ms.getForest();
+         MOOGPSolution ms = (MOOGPSolution)s;
+         return ms.getGp();
       }).collect(Collectors.toList());
 
       PopulationInitialization.apply(programs, gpConfig);
@@ -107,11 +120,11 @@ public class NSGPII {
    }
 
    public void evaluate(Solution obj) {
-      MOOSolution s = (MOOSolution)obj;
+      MOOGPSolution s = (MOOGPSolution)obj;
 
-      com.github.chen0040.gp.treegp.program.Solution forest = s.getForest().makeCopy();
+      com.github.chen0040.gp.treegp.program.Solution forest = s.getGp().makeCopy();
 
-      List<Double> costs = costFunction.evaluateCosts(forest, moeaConfig, gpConfig);
+      List<Double> costs = costFunction.evaluateCosts(forest, moeaConfig.getObjectiveCount(), gpConfig);
 
       s.getCosts().clear();
       s.getCosts().addAll(costs);
@@ -151,10 +164,10 @@ public class NSGPII {
       {
          TupleTwo<Solution, Solution> tournament_winners = tournament();
 
-         MOOSolution child1 = (MOOSolution)tournament_winners._1().makeCopy();
-         MOOSolution child2 = (MOOSolution)tournament_winners._2().makeCopy();
+         MOOGPSolution child1 = (MOOGPSolution)tournament_winners._1().makeCopy();
+         MOOGPSolution child2 = (MOOGPSolution)tournament_winners._2().makeCopy();
 
-         com.github.chen0040.gp.treegp.gp.Crossover.apply(child1.getForest(), child2.getForest(), gpConfig);
+         com.github.chen0040.gp.treegp.gp.Crossover.apply(child1.getGp(), child2.getGp(), gpConfig);
 
          offspring.add(child1);
          offspring.add(child2);
@@ -166,9 +179,9 @@ public class NSGPII {
 
          TupleTwo<Solution, Solution> tournament_winners = tournament();
 
-         MOOSolution child = (MOOSolution)tournament_winners._1().makeCopy();
+         MOOGPSolution child = (MOOGPSolution)tournament_winners._1().makeCopy();
 
-         MicroMutation.apply(child.getForest(), gpConfig);
+         MicroMutation.apply(child.getGp(), gpConfig);
 
          offspring.add(child);
       }
@@ -178,9 +191,9 @@ public class NSGPII {
       {
          TupleTwo<Solution, Solution> tournament_winners = tournament();
 
-         MOOSolution child = (MOOSolution)tournament_winners._1().makeCopy();
+         MOOGPSolution child = (MOOGPSolution)tournament_winners._1().makeCopy();
 
-         MacroMutation.apply(child.getForest(), gpConfig);
+         MacroMutation.apply(child.getGp(), gpConfig);
 
          offspring.add(child);
 
@@ -191,7 +204,7 @@ public class NSGPII {
       {
          TupleTwo<Solution, Solution> tournament_winners = tournament();
 
-         MOOSolution child = (MOOSolution)tournament_winners._1().makeCopy();
+         MOOGPSolution child = (MOOGPSolution)tournament_winners._1().makeCopy();
 
          offspring.add(child);
       }
