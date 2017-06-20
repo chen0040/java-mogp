@@ -150,7 +150,12 @@ public class NSGPII {
 
       com.github.chen0040.gp.treegp.program.Solution forest = s.getGp().makeCopy();
 
-      List<Double> costs = costFunction.evaluateCosts(forest, moeaConfig.getObjectiveCount(), gpConfig);
+      List<Double> costs = costFunction.evaluateCosts(forest, gpConfig);
+
+      if(objectiveCount == 0) {
+         objectiveCount = costs.size();
+         moeaConfig.setObjectiveCount(objectiveCount);
+      }
 
       s.getCosts().clear();
       s.getCosts().addAll(costs);

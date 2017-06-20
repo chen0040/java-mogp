@@ -32,7 +32,7 @@ public class NSGPIIGuiTest {
 
       NSGPII tgp = NSGPII.defaultConfig();
       tgp.setVariableCount(2); // the number of variables is equal to the input dimension of an observation in the "data" list
-      tgp.setCostFunction((CostFunction) (solution, objectiveCount, gpConfig) -> {
+      tgp.setCostFunction((CostFunction) (solution, gpConfig) -> {
          List<Observation> observations = gpConfig.getObservations();
          double error = 0;
          for(Observation observation : observations){

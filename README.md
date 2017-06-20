@@ -10,7 +10,7 @@ Add the following dependency to your POM file:
 <dependency>
   <groupId>com.github.chen0040</groupId>
   <artifactId>java-mogp</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
 </dependency>
 ```
 
@@ -30,7 +30,7 @@ List<Observation> testingData = split_data._2();
 
 NSGPII tgp = NSGPII.defaultConfig();
 tgp.setVariableCount(2); // the number of variables is equal to the input dimension of an observation in the "data" list
-tgp.setCostFunction((CostFunction) (solution, objectiveCount, gpConfig) -> {
+tgp.setCostFunction((CostFunction) (solution, mogpgpConfig) -> {
  List<Observation> observations = gpConfig.getObservations();
  double error = 0;
  for(Observation observation : observations){

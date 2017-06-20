@@ -13,5 +13,5 @@ import java.util.List;
  * Created by xschen on 19/6/2017.
  */
 public interface CostFunction extends Serializable {
-   List<Double> evaluateCosts(Solution solution, int objectiveCount, TreeGP gpConfig);
+   List<Double> evaluateCosts(Solution solution, TreeGP gpConfig);
 }
