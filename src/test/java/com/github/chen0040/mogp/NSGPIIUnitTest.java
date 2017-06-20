@@ -63,6 +63,11 @@ public class NSGPIIUnitTest {
 
       //test(program, testingData, false);
 
+      MOOGPSolution solution = (MOOGPSolution)pareto_front.get(0);
+      Solution program = solution.getGp();
+
+
+
    }
 
    @Test
