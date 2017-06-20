@@ -7,7 +7,11 @@ Genetic Programming Framework that supports Multi-Objective Optimization
 Add the following dependency to your POM file:
 
 ```xml
-
+<dependency>
+  <groupId>com.github.chen0040</groupId>
+  <artifactId>java-mogp</artifactId>
+  <version>1.0.1</version>
+</dependency>
 ```
 
 # Usage
