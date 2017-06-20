@@ -11,6 +11,7 @@ import com.github.chen0040.moea.components.*;
 import com.github.chen0040.moea.components.Population;
 import com.github.chen0040.moea.components.Solution;
 import com.github.chen0040.moea.enums.ReplacementType;
+import com.github.chen0040.moea.utils.ArrayListUtils;
 import com.github.chen0040.moea.utils.InvertedCompareUtils;
 import com.github.chen0040.moea.utils.TournamentSelection;
 import com.github.chen0040.moea.utils.TournamentSelectionResult;
@@ -128,12 +129,14 @@ public class NSGPII {
       population.setMediator(moeaConfig);
       population.initialize(MOOGPSolution::new);
 
-      List<com.github.chen0040.gp.treegp.program.Solution> programs = population.getSolutions().stream().map(s -> {
-         MOOGPSolution ms = (MOOGPSolution)s;
-         return ms.getGp();
-      }).collect(Collectors.toList());
 
+      List<com.github.chen0040.gp.treegp.program.Solution> programs = new ArrayList<>();
       PopulationInitialization.apply(programs, gpConfig);
+
+      for(int i=0; i < populationSize; ++i) {
+         MOOGPSolution solution = (MOOGPSolution)population.getSolutions().get(i);
+         solution.setGp(programs.get(i));
+      }
 
       for(int i=0; i < population.size(); ++i){
          evaluate(population.getSolutions().get(i));
@@ -152,8 +155,8 @@ public class NSGPII {
       s.getCosts().clear();
       s.getCosts().addAll(costs);
 
-      boolean is_archivable = archive.add(s);
 
+      boolean is_archivable = archive.add(s);
       if (archive.size() > this.getMaxArchive())
       {
          archive.truncate(this.getMaxArchive());
@@ -232,7 +235,7 @@ public class NSGPII {
          offspring.add(child);
       }
 
-      for (int i = 0; i < iPopSize; ++i)
+      for (int i = 0; i < offspring.size(); ++i)
       {
          Solution s = offspring.get(i);
          evaluate(s);
@@ -267,11 +270,9 @@ public class NSGPII {
 
    protected void merge2(List<Solution> children)
    {
-      int populationSize = this.getPopulationSize();
-
       Population offspring = new Population();
 
-      for (int i = 0; i < populationSize; i++)
+      for (int i = 0; i < children.size(); i++)
       {
          Solution s1 = children.get(i);
          Solution s2 = population.get(i);
