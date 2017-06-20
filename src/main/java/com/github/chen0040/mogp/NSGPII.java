@@ -72,12 +72,20 @@ public class NSGPII {
       return archive;
    }
 
-   public void defaultConfig(){
+   public void config(){
       gpConfig.getOperatorSet().addAll(new Plus(), new Minus(), new Divide(), new Multiply(), new Power());
       gpConfig.getOperatorSet().addIfLessThanOperator();
       gpConfig.addConstants(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0);
       gpConfig.setVariableCount(2); // equal to the number of input parameter in an observation
    }
+
+   public static NSGPII defaultConfig(){
+      NSGPII gp = new NSGPII();
+      gp.config();
+      return gp;
+   }
+
+
 
    public List<Observation> getObservations(){
       return gpConfig.getObservations();
@@ -128,7 +136,7 @@ public class NSGPII {
       PopulationInitialization.apply(programs, gpConfig);
 
       for(int i=0; i < population.size(); ++i){
-         evaluate(population.get(i));
+         evaluate(population.getSolutions().get(i));
       }
       population.sort();
       currentGeneration = 0;
@@ -307,5 +315,22 @@ public class NSGPII {
       }
 
       population.truncate(populationSize);
+   }
+
+
+   public NondominatedPopulation fit(List<Observation> trainingData) {
+      gpConfig.getObservations().clear();
+      gpConfig.getObservations().addAll(trainingData);
+
+      initialize();
+      int maxGenerations = this.getMaxGenerations();
+      for(int generation = 0; generation < maxGenerations; ++generation) {
+         evolve();
+         if(displayEvery > 0 && generation % displayEvery == 0){
+            System.out.println("Generation #" + generation + "\tArchive size: " + archive.size());
+         }
+      }
+
+      return archive;
    }
 }

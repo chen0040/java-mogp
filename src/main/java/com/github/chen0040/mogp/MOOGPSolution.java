@@ -37,7 +37,7 @@ public class MOOGPSolution extends Solution {
 
 
    @Override public void initialize(Mediator mediator) {
-      throw new NotImplementedException();
+      data.clear();
    }
 
 
