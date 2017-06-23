@@ -10,7 +10,7 @@ Add the following dependency to your POM file:
 <dependency>
   <groupId>com.github.chen0040</groupId>
   <artifactId>java-mogp</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 </dependency>
 ```
 
@@ -56,7 +56,7 @@ input dimension of the problem to be solved. In the case of "Mexican Hat" symbol
 number of variables is 2.
 
 The cost evaluator computes two objectives. The first objective is the training cost of a tree-gp 'program' on the 'observations' 
-(which is the symbolic regression trainingData), the second objective if the average depth of the tree-gp 'program'.
+(which is the symbolic regression trainingData), the second objective is the average depth of the tree-gp 'program'.
 
 ### Test the programs in the pareto front obtained from the TreeGP evolution
 

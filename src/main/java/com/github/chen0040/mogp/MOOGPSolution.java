@@ -1,11 +1,11 @@
 package com.github.chen0040.mogp;
 
 
+import com.github.chen0040.data.exceptions.NotImplementedException;
 import com.github.chen0040.moea.components.Mediator;
 import com.github.chen0040.moea.components.Solution;
 import lombok.Getter;
 import lombok.Setter;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
 /**
